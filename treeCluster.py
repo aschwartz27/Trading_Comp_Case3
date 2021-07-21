@@ -79,8 +79,8 @@ def treeClusterInit(RORDF, allFundsRORArr): #creates a binary tree of all the fu
         dictList.append(minRow + minCol)
         groupedDict[minRow + minCol] = FundGroup(minRow + minCol, groupedDict[minRow], groupedDict[minCol], groupedDict[minRow].fundsList + (groupedDict[minCol].fundsList))
         newRow.append(100) #add 100 to the end of the row becasue they will line up with the other new row
-        dfTemp = pd.DataFrame(data = newRow) #add the data to a temp dataframe
-        dfTemp = dfTemp.T #transpose the dataframe to turn it into a row
+        dfTemp = pd.DataFrame(data = newRow) #add the data to a temp DataFrame
+        dfTemp = dfTemp.T #transpose the DataFrame to turn it into a row
         dfTemp.columns = allFundsRORArr # set the column name to the name of the current columns
         D2 = D2.append(dfTemp) #add the row to the bottom of the DF
         D2 = D2.rename(index = {0:minRow + minCol}) #rename the new row to the new funds
@@ -122,7 +122,7 @@ def calculateSharpe(startDate, endDate):
             groupedDict = treeClusterInit((df.iloc[i - 150: i,[25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48]]), allFundsROR.copy())
         #get the optimal weights based off the last 150 days of data
         getWeights(groupedDict[0], groupedDict[1], noEditAllFundsROR[i - 150: i].copy())
-        #add these new weights to the dataframe
+        #add these new weights to the DataFrame
         for j in allFundsROR:
             df.at[i , j[0:2] + "Weight"] = groupedDict[0][j].weight
             allFundsWeight.append(j[0:2] + 'Weight')
@@ -160,7 +160,7 @@ def calculateSharpe(startDate, endDate):
         df['weightedROR'] += df[i] * df[i[0:2] + 'ROR'].shift(-1)
     df['weightedROR'] -= df['totalWeightChange'] * .003 #subtract the exchange fees
 
-    #Find the sharpe ratio of all the different asset classes and the weights we created
+    #Find the Sharpe ratio of all the different asset classes and the weights we created
     weightedStdev = df.loc[startDate:endDate,['weightedROR']].std(ddof = 1)
     weightedMean = df.loc[startDate:endDate,['weightedROR']].mean()
     weightedSharpe = weightedMean / weightedStdev * (252 ** (1.0/2.0))
